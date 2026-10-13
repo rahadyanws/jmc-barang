@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  OPERATOR
+}
+
+model User {
+  id           String    @id @default(uuid()) @db.Uuid
+  username     String    @unique @db.VarChar(100)
+  passwordHash String    @map("password_hash") @db.VarChar(255)
+  name         String    @db.VarChar(100)
+  email        String    @unique @db.VarChar(100)
+  role         Role
+  isLocked     Boolean   @default(false) @map("is_locked")
+  lockedAt     DateTime? @map("locked_at") @db.Timestamptz(6)
+  lastLoginAt  DateTime? @map("last_login_at") @db.Timestamptz(6)
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  asOperator IncomingGoods[] @relation("IncomingOperator")
+  createdBy  IncomingGoods[] @relation("IncomingCreatedBy")
+  verifiedBy IncomingGoods[] @relation("IncomingVerifiedBy")
+
+  @@index([role])
+  @@map("users")
+}
+
+model Category {
+  id        String   @id @default(uuid()) @db.Uuid
+  code      String   @unique @db.VarChar(10)
+  name      String   @db.VarChar(100)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  subCategories SubCategory[]
+  counter       ItemCodeCounter?
+
+  @@map("categories")
+}
+
+model SubCategory {
+  id         String   @id @default(uuid()) @db.Uuid
+  categoryId String   @map("category_id") @db.Uuid
+  name       String   @db.VarChar(100)
+  priceLimit Decimal  @map("price_limit") @db.Decimal(18, 0)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  category      Category        @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  incomingGoods IncomingGoods[]
+
+  @@unique([categoryId, name])
+  @@index([categoryId])
+  @@map("sub_categories")
+}
+
+model ItemCodeCounter {
+  categoryId String   @id @map("category_id") @db.Uuid
+  lastValue  Int      @default(0) @map("last_value")
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@map("item_code_counters")
+}
+
+model IncomingGoods {
+  id                  String    @id @default(uuid()) @db.Uuid
+  transactionDate     DateTime  @default(now()) @map("transaction_date") @db.Timestamptz(6)
+  operatorId          String    @map("operator_id") @db.Uuid
+  subCategoryId       String    @map("sub_category_id") @db.Uuid
+  origin              String    @db.VarChar(200)
+  letterNumber        String?   @map("letter_number") @db.VarChar(100)
+  unit                String    @default("Gudang Utama") @db.VarChar(100)
+
+  attachmentKey       String?   @map("attachment_key") @db.VarChar(255)
+  attachmentName      String?   @map("attachment_name") @db.VarChar(255)
+  attachmentSize      Int?      @map("attachment_size")
+  attachmentMime      String?   @map("attachment_mime") @db.VarChar(100)
+
+  priceLimitSnapshot  Decimal   @map("price_limit_snapshot") @db.Decimal(18, 0)
+  totalAmount         Decimal   @map("total_amount") @db.Decimal(18, 0)
+
+  isVerified          Boolean   @default(false) @map("is_verified")
+  verifiedAt          DateTime? @map("verified_at") @db.Timestamptz(6)
+  verifiedById        String?   @map("verified_by_id") @db.Uuid
+
+  createdById         String    @map("created_by_id") @db.Uuid
+  createdAt           DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  operator     User        @relation("IncomingOperator", fields: [operatorId], references: [id], onDelete: Restrict)
+  createdBy    User        @relation("IncomingCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+  verifiedBy   User?       @relation("IncomingVerifiedBy", fields: [verifiedById], references: [id], onDelete: SetNull)
+  subCategory  SubCategory @relation(fields: [subCategoryId], references: [id], onDelete: Restrict)
+  items        IncomingGoodsItem[]
+
+  @@index([transactionDate(sort: Desc)])
+  @@index([operatorId, transactionDate(sort: Desc)])
+  @@index([subCategoryId])
+  @@index([isVerified])
+  @@map("incoming_goods")
+}
+
+model IncomingGoodsItem {
+  id              String   @id @default(uuid()) @db.Uuid
+  incomingGoodsId String   @map("incoming_goods_id") @db.Uuid
+  lineNo          Int      @map("line_no")
+  itemCode        String   @unique @map("item_code") @db.VarChar(20)
+  name            String   @db.VarChar(200)
+  unitPrice       Decimal  @map("unit_price") @db.Decimal(18, 0)
+  quantity        Int
+  uom             String   @db.VarChar(40)
+  lineTotal       Decimal  @map("line_total") @db.Decimal(18, 0)
+  expiredDate     DateTime? @map("expired_date") @db.Date
+
+  incomingGoods IncomingGoods @relation(fields: [incomingGoodsId], references: [id], onDelete: Cascade)
+
+  @@index([incomingGoodsId, lineNo])
+  @@map("incoming_goods_items")
+}
