@@ -1,6 +1,9 @@
 {
     "functions": {
-        "dist/main.js": {}
+        "dist/main.js": {
+            "memory": 1024,
+            "maxDuration": 30
+        }
     },
     "rewrites": [
         {
