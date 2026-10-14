@@ -13,7 +13,7 @@ export function middleware(request: NextRequest): NextResponse {
     return NextResponse.redirect(url);
   }
 
-  if (hasSession && pathname === '/login') {
+  if (hasSession && (pathname === '/' || pathname === '/login')) {
     const url = request.nextUrl.clone();
     url.pathname = '/barang-masuk';
     url.search = '';
