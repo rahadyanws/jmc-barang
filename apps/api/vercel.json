@@ -1,5 +1,15 @@
 {
-    "functions": {
-        "dist/main.js": {}
-    }
+    "version": 2,
+    "builds": [
+        {
+            "src": "dist/main.js",
+            "use": "@vercel/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "dist/main.js"
+        }
+    ]
 }
