@@ -1,7 +1,5 @@
 {
     "functions": {
-        "dist/main.js": {
-            "runtime": "@vercel/node"
-        }
+        "dist/main.js": {}
     }
 }
