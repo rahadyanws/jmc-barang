@@ -4,11 +4,8 @@
 
 | | |
 |---|---|
-| 🔗 **Link Deployment (Live App)** | **https://GANTI-DENGAN-URL-VERCEL.vercel.app** |
-| 🎬 **Link Video Demo** | **https://GANTI-DENGAN-URL-VIDEO** |
-| 📘 Dokumentasi API (Swagger) | https://GANTI-DENGAN-URL-RENDER.onrender.com/api/docs |
-
-> ⏳ **Catatan untuk penilai:** backend berjalan di hosting gratis. Jika request pertama terasa lambat (±30–60 detik), itu *cold start*; mohon tunggu sebentar lalu muat ulang. Sistem keep-alive sudah dipasang untuk meminimalkan hal ini.
+| 🔗 **Link Deployment (Live App)** | **https://jmc-barang-web.vercel.app/login** |
+| 🎬 **Link Video Demo** | **https://drive.google.com/file/d/1ECoDwUPDGvTXhn3xfmL0Xm6kQura0wDr/view?usp=sharing** |
 
 ---
 
@@ -16,12 +13,12 @@
 
 | Layer | Teknologi |
 |---|---|
-| **Frontend** | Next.js (App Router, React), TypeScript, Tailwind CSS, shadcn/ui, TanStack Query & Table, React Hook Form + Zod |
+| **Frontend** | Next.js (App Router, React 18+), TypeScript, Tailwind CSS, shadcn/ui, TanStack Query & Table, React Hook Form + Zod |
 | **Backend** | NestJS (TypeScript), Prisma ORM, Zod (`nestjs-zod`), JWT (cookie `httpOnly`), argon2id, exceljs, pdfmake |
 | **Database** | PostgreSQL (Supabase) |
 | **Storage lampiran** | Supabase Storage (bucket private, signed URL) |
-| **Deployment** | Vercel (web) · Render (API) · Supabase (DB & storage) |
-| **Tooling** | npm workspaces (monorepo), ESLint, Prettier, Jest, GitHub Actions |
+| **Deployment** | Vercel (web & API) · Supabase (DB & storage) |
+| **Tooling** | npm, ESLint, Prettier, Jest, GitHub Actions |
 
 ---
 
@@ -64,36 +61,39 @@
 ## 4. Petunjuk Instalasi Lokal
 
 ### Prasyarat
-Node.js LTS (≥ 22), npm ≥ 10 (sudah termasuk dalam Node.js — tidak perlu pnpm/yarn), Docker dengan Compose v2 (untuk PostgreSQL lokal), Git.
+Node.js LTS (≥ 22), npm ≥ 10, Docker dengan Compose v2 (untuk PostgreSQL lokal), Git.
 
 > Windows: jalankan perintah di **Git Bash** (atau WSL). Docker Desktop harus berjalan sebelum `docker compose`.
 
 ### Langkah
 
 ```bash
-# 1. Clone & install (satu kali di root; semua workspace ikut terpasang)
+# 1. Clone repository
 git clone <URL-REPOSITORY> && cd <NAMA-FOLDER>
-npm ci
 
-# 2. Jalankan PostgreSQL lokal (menunggu sampai healthy)
+# 2. Install dependencies (root: tooling; api & web: dependensi masing-masing)
+npm ci
+npm ci --prefix apps/api
+npm ci --prefix apps/web
+
+# 3. Jalankan PostgreSQL lokal (menunggu sampai healthy)
 docker compose up -d --wait db
 
-# 3. Siapkan environment
+# 4. Siapkan environment
 cp apps/api/.env.example apps/api/.env
 cp apps/web/.env.example apps/web/.env.local
 # (edit nilai bila perlu — lihat tabel di bawah)
 
-# 4. Migrasi database & seed data contoh
+# 5. Migrasi database & seed data contoh
 npm run db:migrate
 npm run db:seed
 
-# 5. Jalankan aplikasi
+# 6. Jalankan aplikasi
 npm run dev
 ```
 
 - Web: http://localhost:3000
 - API: http://localhost:4000/api/v1
-- Swagger: http://localhost:4000/api/docs
 
 Login memakai akun pada bagian [Akun Pengujian](#2-akun-pengujian-kredensial).
 
@@ -120,6 +120,7 @@ Daftar lengkap & panduan deploy: [`docs/SETUP.md`](docs/SETUP.md).
 | `npm test` | Unit test |
 | `npm run test:e2e` | E2E API (butuh DB test) |
 | `npm run build` | Build produksi |
+| `npm run db:deploy` | Terapkan migrasi ke database tujuan (tanpa membuat migrasi baru) |
 | `npm run db:studio` | Lihat isi database (Prisma Studio) |
 
 ---
@@ -131,7 +132,6 @@ Daftar lengkap & panduan deploy: [`docs/SETUP.md`](docs/SETUP.md).
 ├─ apps/
 │  ├─ api/            # NestJS + Prisma (migrasi & seed di apps/api/prisma)
 │  └─ web/            # Next.js
-├─ packages/shared/   # Skema Zod & konstanta yang dipakai FE + BE
 └─ docs/              # Dokumentasi proyek
 ```
 
@@ -165,7 +165,7 @@ Beberapa hal tidak dijelaskan eksplisit pada soal. Keputusan yang diambil (lengk
 
 ## 8. Catatan Deployment
 
-- **Web** di Vercel; semua request `/api/*` di-*proxy* ke API di Render sehingga cookie sesi bersifat same-origin.
-- **API** di Render menjalankan `prisma migrate deploy` saat start.
-- **DB & file** di Supabase.
-- Workflow GitHub Actions `keepalive` memanggil `/api/v1/health` secara berkala.
+- **Web** di Vercel (Root Directory: `apps/web`); semua request `/api/*` di-*proxy* ke API sehingga cookie sesi bersifat same-origin.
+- **API** di Vercel (Root Directory: `apps/api`, entrypoint `api/index.js`, function di `vercel.json`).
+- **DB & file** di Supabase. Migrasi dijalankan manual sekali saat deploy (`npm run db:deploy`), karena build Vercel hanya menjalankan `prisma generate`.
+- Workflow GitHub Actions `keepalive` memanggil `/api/v1/health` secara berkala (set secret `API_HEALTH_URL` di repo).
