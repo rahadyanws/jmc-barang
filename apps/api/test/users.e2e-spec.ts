@@ -14,6 +14,7 @@ describe('Users (e2e)', () => {
   let operatorCookie: string;
   let adminId: string;
   let createdUserId: string;
+  let extraAdminIds: string[] = [];
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
@@ -30,6 +31,17 @@ describe('Users (e2e)', () => {
       select: { id: true },
     });
     adminId = admin.id;
+
+    // BR-5 LAST_ADMIN test mengasumsikan hanya satu ADMIN (seed).
+    // Akun ADMIN tambahan (mis. dari pengujian manual) diturunkan sementara.
+    const extraAdmins = await prisma.user.findMany({
+      where: { role: 'ADMIN', username: { not: 'administrator' } },
+      select: { id: true },
+    });
+    extraAdminIds = extraAdmins.map((user) => user.id);
+    for (const extra of extraAdmins) {
+      await prisma.user.update({ where: { id: extra.id }, data: { role: 'OPERATOR' } });
+    }
   });
 
   afterAll(async () => {
@@ -37,8 +49,19 @@ describe('Users (e2e)', () => {
       where: { origin: 'E2E Users Fixture' },
     });
     await prisma.user.deleteMany({
-      where: { username: { in: ['e2eoperator', 'e2eadmin'] } },
+      where: {
+        OR: [
+          { username: { in: ['e2eoperator', 'e2eadmin'] } },
+          { username: { startsWith: 'e2epag' } },
+        ],
+      },
     });
+    for (const extraId of extraAdminIds) {
+      await prisma.user.updateMany({
+        where: { id: extraId, role: 'OPERATOR' },
+        data: { role: 'ADMIN' },
+      });
+    }
     await app.close();
   });
 
@@ -259,5 +282,53 @@ describe('Users (e2e)', () => {
       .get(`/api/v1/users/${createdUserId}`)
       .set('Cookie', adminCookie)
       .expect(404);
+  });
+
+  it('daftar user: default 10/halaman, page=2, tolak pageSize > 50', async () => {
+    for (let i = 0; i < 7; i += 1) {
+      await request(app.getHttpServer())
+        .post('/api/v1/users')
+        .set('Cookie', adminCookie)
+        .send({
+          username: `e2epag${String(i).padStart(2, '0')}`,
+          password: 'Operator12345',
+          name: `Paging User ${i}`,
+          email: `e2epag${i}@jmc-indonesia.test`,
+          role: 'OPERATOR',
+        })
+        .expect(201);
+    }
+
+    const totalUsers = await prisma.user.count();
+    expect(totalUsers).toBeGreaterThanOrEqual(11);
+
+    const page1 = await request(app.getHttpServer())
+      .get('/api/v1/users')
+      .set('Cookie', adminCookie)
+      .expect(200);
+    expect(page1.body.meta).toMatchObject({ page: 1, pageSize: 10 });
+    expect(page1.body.data).toHaveLength(10);
+
+    const page2 = await request(app.getHttpServer())
+      .get('/api/v1/users')
+      .query({ page: 2 })
+      .set('Cookie', adminCookie)
+      .expect(200);
+    expect(page2.body.meta).toMatchObject({
+      page: 2,
+      pageSize: 10,
+      totalItems: totalUsers,
+      totalPages: Math.ceil(totalUsers / 10),
+    });
+    expect(page2.body.data).toHaveLength(totalUsers - 10);
+
+    const tooBig = await request(app.getHttpServer())
+      .get('/api/v1/users')
+      .query({ pageSize: 51 })
+      .set('Cookie', adminCookie)
+      .expect(400);
+    expect(tooBig.body.error.code).toBe('VALIDATION_ERROR');
+
+    await prisma.user.deleteMany({ where: { username: { startsWith: 'e2epag' } } });
   });
 });

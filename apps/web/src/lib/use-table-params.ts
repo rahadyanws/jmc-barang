@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export interface TableParams {
@@ -45,4 +46,18 @@ export function useTableParams(defaults: {
   }
 
   return { page, search, sortBy, sortOrder, raw: searchParams, setParams, getParam };
+}
+
+export function useClampPage(
+  page: number,
+  meta: { totalPages: number } | undefined,
+  isPending: boolean,
+  setParams: TableParams['setParams'],
+): void {
+  useEffect(() => {
+    if (isPending || meta === undefined || page <= meta.totalPages) {
+      return;
+    }
+    setParams({ page: meta.totalPages > 1 ? String(meta.totalPages) : null });
+  }, [isPending, meta, page, setParams]);
 }

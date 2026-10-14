@@ -20,7 +20,7 @@ import { roleLabel } from '@/lib/format';
 import { apiErrorMessage } from '@/lib/form-errors';
 import { messages } from '@/lib/messages';
 import { cn } from '@/lib/utils';
-import { useTableParams } from '@/lib/use-table-params';
+import { useClampPage, useTableParams } from '@/lib/use-table-params';
 import { useDeleteUser, useLockUser, useUserList } from '../hooks';
 import { UserFormModal } from './user-form-modal';
 
@@ -52,6 +52,7 @@ export function UsersTable() {
 
   const rows = list.data?.data ?? [];
   const meta = list.data?.meta;
+  useClampPage(page, meta, list.isPending, setParams);
   const currentUserId = session?.id;
 
   function openCreate(): void {

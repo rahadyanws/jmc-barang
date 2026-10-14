@@ -16,7 +16,7 @@ import { SearchInput } from '@/components/shared/search-input';
 import { apiErrorMessage } from '@/lib/form-errors';
 import { messages } from '@/lib/messages';
 import { cn } from '@/lib/utils';
-import { useTableParams } from '@/lib/use-table-params';
+import { useClampPage, useTableParams } from '@/lib/use-table-params';
 import { CategoryFormModal } from '../components/category-form-modal';
 import { useCategoryList, useDeleteCategory } from '../hooks';
 
@@ -39,6 +39,7 @@ export function CategoriesTable() {
 
   const rows = list.data?.data ?? [];
   const meta = list.data?.meta;
+  useClampPage(page, meta, list.isPending, setParams);
 
   function openCreate(): void {
     setEditing(null);

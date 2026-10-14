@@ -22,7 +22,7 @@ import { formatDateTimeWib, formatRupiah } from '@/lib/format';
 import { apiErrorMessage } from '@/lib/form-errors';
 import { messages } from '@/lib/messages';
 import { cn } from '@/lib/utils';
-import { useTableParams } from '@/lib/use-table-params';
+import { useClampPage, useTableParams } from '@/lib/use-table-params';
 import { incomingGoodsExportPath, incomingGoodsPrintPath } from '../api';
 import {
   useDeleteIncomingGoods,
@@ -86,6 +86,7 @@ export function IncomingGoodsTable() {
 
   const rows = list.data?.data ?? [];
   const meta = list.data?.meta;
+  useClampPage(page, meta, list.isPending, setParams);
 
   async function confirmVerify(): Promise<void> {
     if (verifying === null) {

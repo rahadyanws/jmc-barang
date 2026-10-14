@@ -280,4 +280,101 @@ describe('Master Data (e2e)', () => {
         .expect(204);
     });
   });
+
+  describe('Paging (BR-22 pattern)', () => {
+    it('kategori: default 10/halaman, page=2, tolak pageSize > 50', async () => {
+      for (let i = 0; i < 11; i += 1) {
+        await request(app.getHttpServer())
+          .post('/api/v1/categories')
+          .set('Cookie', adminCookie)
+          .send({ code: `e2epg${String(i).padStart(2, '0')}`, name: `Kategori Paging ${i}` })
+          .expect(201);
+      }
+
+      const page1 = await request(app.getHttpServer())
+        .get('/api/v1/categories')
+        .query({ search: 'Kategori Paging' })
+        .set('Cookie', adminCookie)
+        .expect(200);
+      expect(page1.body.meta).toMatchObject({
+        page: 1,
+        pageSize: 10,
+        totalItems: 11,
+        totalPages: 2,
+      });
+      expect(page1.body.data).toHaveLength(10);
+
+      const page2 = await request(app.getHttpServer())
+        .get('/api/v1/categories')
+        .query({ search: 'Kategori Paging', page: 2 })
+        .set('Cookie', adminCookie)
+        .expect(200);
+      expect(page2.body.meta).toMatchObject({ page: 2, pageSize: 10, totalPages: 2 });
+      expect(page2.body.data).toHaveLength(1);
+
+      const tooBig = await request(app.getHttpServer())
+        .get('/api/v1/categories')
+        .query({ pageSize: 51 })
+        .set('Cookie', adminCookie)
+        .expect(400);
+      expect(tooBig.body.error.code).toBe('VALIDATION_ERROR');
+
+      await prisma.category.deleteMany({ where: { code: { startsWith: 'E2EPG' } } });
+    });
+
+    it('sub kategori: page=2 mengembalikan sisa baris', async () => {
+      const category = await request(app.getHttpServer())
+        .post('/api/v1/categories')
+        .set('Cookie', adminCookie)
+        .send({ code: 'e2esubpg', name: 'Kategori Sub Paging' })
+        .expect(201);
+      const pagingCategoryId: string = category.body.data.id;
+
+      try {
+        for (let i = 0; i < 11; i += 1) {
+          await request(app.getHttpServer())
+            .post('/api/v1/sub-categories')
+            .set('Cookie', adminCookie)
+            .send({
+              categoryId: pagingCategoryId,
+              name: `Sub Paging ${String(i).padStart(2, '0')}`,
+              priceLimit: 100000,
+            })
+            .expect(201);
+        }
+
+        const page1 = await request(app.getHttpServer())
+          .get('/api/v1/sub-categories')
+          .query({ categoryId: pagingCategoryId })
+          .set('Cookie', adminCookie)
+          .expect(200);
+        expect(page1.body.meta).toMatchObject({
+          page: 1,
+          pageSize: 10,
+          totalItems: 11,
+          totalPages: 2,
+        });
+        expect(page1.body.data).toHaveLength(10);
+
+        const page2 = await request(app.getHttpServer())
+          .get('/api/v1/sub-categories')
+          .query({ categoryId: pagingCategoryId, page: 2 })
+          .set('Cookie', adminCookie)
+          .expect(200);
+        expect(page2.body.meta).toMatchObject({ page: 2, pageSize: 10 });
+        expect(page2.body.data).toHaveLength(1);
+        expect(page2.body.data[0].name).toBe('Sub Paging 10');
+
+        const tooBig = await request(app.getHttpServer())
+          .get('/api/v1/sub-categories')
+          .query({ pageSize: 51 })
+          .set('Cookie', adminCookie)
+          .expect(400);
+        expect(tooBig.body.error.code).toBe('VALIDATION_ERROR');
+      } finally {
+        await prisma.subCategory.deleteMany({ where: { categoryId: pagingCategoryId } });
+        await prisma.category.deleteMany({ where: { id: pagingCategoryId } });
+      }
+    });
+  });
 });

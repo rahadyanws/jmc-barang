@@ -18,7 +18,7 @@ import { formatRupiah } from '@/lib/format';
 import { apiErrorMessage } from '@/lib/form-errors';
 import { messages } from '@/lib/messages';
 import { cn } from '@/lib/utils';
-import { useTableParams } from '@/lib/use-table-params';
+import { useClampPage, useTableParams } from '@/lib/use-table-params';
 import { useCategoryOptions } from '@/features/categories/hooks';
 import { SubCategoryFormModal } from './sub-category-form-modal';
 import { useDeleteSubCategory, useSubCategoryList } from '../hooks';
@@ -50,6 +50,7 @@ export function SubCategoriesTable() {
 
   const rows = list.data?.data ?? [];
   const meta = list.data?.meta;
+  useClampPage(page, meta, list.isPending, setParams);
 
   function openCreate(): void {
     setEditing(null);
