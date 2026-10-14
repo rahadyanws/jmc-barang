@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-import type { IncomingGoodsDetailDto } from '@jmc/shared';
+import type { IncomingGoodsDetailDto } from '@/shared';
 
 import { useSession } from '@/features/auth/hooks/use-session';
 import { useCategoryOptions } from '@/features/categories/hooks';

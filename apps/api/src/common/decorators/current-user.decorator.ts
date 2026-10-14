@@ -1,6 +1,6 @@
 import { createParamDecorator, type ExecutionContext } from '@nestjs/common';
 
-import type { SessionUser } from '@jmc/shared';
+import type { SessionUser } from '../../shared';
 
 export const CurrentUser = createParamDecorator(
   (_data: unknown, context: ExecutionContext): SessionUser => {

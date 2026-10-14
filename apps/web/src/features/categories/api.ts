@@ -5,7 +5,7 @@ import type {
   CreateCategoryInput,
   PaginationMeta,
   UpdateCategoryInput,
-} from '@jmc/shared';
+} from '@/shared';
 
 import { apiFetch } from '@/lib/api-client';
 

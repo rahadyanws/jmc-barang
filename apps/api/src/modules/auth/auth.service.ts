@@ -2,7 +2,7 @@ import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/c
 import { JwtService } from '@nestjs/jwt';
 import { hash, verify } from 'argon2';
 
-import type { SessionUser } from '@jmc/shared';
+import type { SessionUser } from '../../shared';
 
 import { PrismaService } from '../../prisma/prisma.service';
 import type { LoginDto } from './dto/login.dto';

@@ -6,7 +6,7 @@ import {
   subCategoryListQuerySchema,
   subCategoryOptionsQuerySchema,
   updateSubCategorySchema,
-} from '@jmc/shared';
+} from '../../../shared';
 
 export class SubCategoryListQueryDto extends createZodDto(subCategoryListQuerySchema) {}
 export class SubCategoryOptionsQueryDto extends createZodDto(subCategoryOptionsQuerySchema) {}

@@ -1,6 +1,6 @@
 import type { Prisma } from '@prisma/client';
 
-import type { SessionUser } from '@jmc/shared';
+import type { SessionUser } from '../../shared';
 
 /**
  * BR-18: Operator hanya mengakses transaksi miliknya; Admin tanpa batas.

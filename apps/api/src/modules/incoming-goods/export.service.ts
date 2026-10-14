@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import {
   type IncomingGoodsExportQuery,
   type SessionUser,
-} from '@jmc/shared';
+} from '../../shared';
 
 import { IncomingGoodsService } from './incoming-goods.service';
 

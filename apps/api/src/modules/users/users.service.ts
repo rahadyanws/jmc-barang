@@ -8,7 +8,7 @@ import type {
   Role,
   UpdateUserInput,
   UserListQuery,
-} from '@jmc/shared';
+} from '../../shared';
 
 import { buildMeta } from '../../common/utils/pagination.util';
 import { PrismaService } from '../../prisma/prisma.service';

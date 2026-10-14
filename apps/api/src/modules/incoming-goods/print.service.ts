@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import type { IncomingGoodsDetailDto, SessionUser } from '@jmc/shared';
+import type { IncomingGoodsDetailDto, SessionUser } from '../../shared';
 
 import { IncomingGoodsService } from './incoming-goods.service';
 

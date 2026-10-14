@@ -7,7 +7,7 @@ import {
   updateUserSchema,
   userListQuerySchema,
   userOptionsQuerySchema,
-} from '@jmc/shared';
+} from '../../../shared';
 
 export class UserListQueryDto extends createZodDto(userListQuerySchema) {}
 export class UserOptionsQueryDto extends createZodDto(userOptionsQuerySchema) {}

@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import type { UpdateSubCategoryInput } from '@jmc/shared';
+import type { UpdateSubCategoryInput } from '@/shared';
 
 import { queryKeys } from '@/lib/query-keys';
 import {

@@ -4,7 +4,7 @@ import { ShieldAlert } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, type ReactNode } from 'react';
 
-import type { Role } from '@jmc/shared';
+import type { Role } from '@/shared';
 
 import { messages } from '@/lib/messages';
 import { useSession } from '@/features/auth/hooks/use-session';

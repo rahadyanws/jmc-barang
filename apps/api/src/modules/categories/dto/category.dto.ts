@@ -5,7 +5,7 @@ import {
   createCategorySchema,
   idParamSchema,
   updateCategorySchema,
-} from '@jmc/shared';
+} from '../../../shared';
 
 export class CategoryListQueryDto extends createZodDto(categoryListQuerySchema) {}
 export class CreateCategoryDto extends createZodDto(createCategorySchema) {}

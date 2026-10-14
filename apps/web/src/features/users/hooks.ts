@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import type { Role, UpdateUserInput } from '@jmc/shared';
+import type { Role, UpdateUserInput } from '@/shared';
 
 import { queryKeys } from '@/lib/query-keys';
 import { createUser, deleteUser, listUserOptions, listUsers, lockUser, updateUser } from './api';

@@ -4,7 +4,7 @@ import type {
   IncomingGoodsDetailDto,
   PaginationMeta,
   UpdateIncomingGoodsInput,
-} from '@jmc/shared';
+} from '@/shared';
 
 import { API_BASE_PATH } from '@/lib/constants';
 import { apiFetch } from '@/lib/api-client';

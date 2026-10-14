@@ -20,7 +20,7 @@ import {
   type PaginationMeta,
   type SessionUser,
   type UpdateIncomingGoodsInput,
-} from '@jmc/shared';
+} from '../../shared';
 
 import { buildMeta } from '../../common/utils/pagination.util';
 import { PrismaService } from '../../prisma/prisma.service';

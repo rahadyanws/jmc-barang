@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 
+import type { IncomingMessage, ServerResponse } from 'node:http';
+
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
@@ -8,9 +10,11 @@ import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { env } from './config/env';
 
-let cachedServer: any;
+type CachedServer = (req: IncomingMessage, res: ServerResponse) => unknown;
 
-async function bootstrapServer() {
+let cachedServer: CachedServer | undefined;
+
+async function bootstrapServer(): Promise<CachedServer> {
     if (!cachedServer) {
         const app = await NestFactory.create(AppModule);
         const logger = new Logger('Bootstrap');
@@ -34,11 +38,15 @@ async function bootstrapServer() {
         }
     }
 
-    return cachedServer;
+    const server = cachedServer;
+    if (!server) {
+        throw new Error('Server HTTP belum terinisialisasi');
+    }
+    return server;
 }
 
 // Handler untuk Vercel Serverless Function
-export default async function handler(req: any, res: any) {
+export default async function handler(req: IncomingMessage, res: ServerResponse) {
     const server = await bootstrapServer();
     return server(req, res);
 }

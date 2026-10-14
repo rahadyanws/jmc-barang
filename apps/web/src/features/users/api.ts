@@ -7,7 +7,7 @@ import type {
   UpdateUserInput,
   UserOptionDto,
   UserDto,
-} from '@jmc/shared';
+} from '@/shared';
 
 import { apiFetch } from '@/lib/api-client';
 

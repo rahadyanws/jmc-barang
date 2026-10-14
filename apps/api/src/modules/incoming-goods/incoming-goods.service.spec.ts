@@ -10,7 +10,7 @@ import type {
   CreateIncomingGoodsInput,
   SessionUser,
   UpdateIncomingGoodsInput,
-} from '@jmc/shared';
+} from '../../shared';
 
 import type { PrismaService } from '../../prisma/prisma.service';
 import type { StorageService } from '../storage/storage.service';

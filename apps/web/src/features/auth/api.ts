@@ -1,4 +1,4 @@
-import type { ApiSuccess, SessionUser } from '@jmc/shared';
+import type { ApiSuccess, SessionUser } from '@/shared';
 
 import { apiFetch } from '@/lib/api-client';
 

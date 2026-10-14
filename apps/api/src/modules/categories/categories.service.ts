@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
-import type { CategoryListQuery, CreateCategoryInput, UpdateCategoryInput } from '@jmc/shared';
+import type { CategoryListQuery, CreateCategoryInput, UpdateCategoryInput } from '../../shared';
 
 import { buildMeta } from '../../common/utils/pagination.util';
 import { PrismaService } from '../../prisma/prisma.service';

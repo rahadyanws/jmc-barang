@@ -19,7 +19,7 @@ import {
   uomSchema,
   uuidSchema,
   expiredDateSchema,
-} from '@jmc/shared';
+} from '@/shared';
 
 import { Button } from '@/components/shared/button';
 import { ConfirmDialog } from '@/components/shared/confirm-dialog';

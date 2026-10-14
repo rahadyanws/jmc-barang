@@ -6,7 +6,4 @@ module.exports = {
   testRegex: '.*\\.spec\\.ts$',
   moduleFileExtensions: ['js', 'json', 'ts'],
   setupFiles: ['<rootDir>/../test/setup-env.ts'],
-  moduleNameMapper: {
-    '^@jmc/shared$': '<rootDir>/../../../packages/shared/src/index.ts',
-  },
 };

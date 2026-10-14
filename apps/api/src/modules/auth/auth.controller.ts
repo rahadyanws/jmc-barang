@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpCode, Post, Res } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import type { Response } from 'express';
 
-import type { SessionUser } from '@jmc/shared';
+import type { SessionUser } from '../../shared';
 
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Public } from '../../common/decorators/public.decorator';

@@ -4,7 +4,7 @@ import { dirname, resolve } from 'node:path';
 
 import { BadRequestException, Injectable } from '@nestjs/common';
 
-import { MAX_ATTACHMENT_MB } from '@jmc/shared';
+import { MAX_ATTACHMENT_MB } from '../../shared';
 
 import { env } from '../../config/env';
 

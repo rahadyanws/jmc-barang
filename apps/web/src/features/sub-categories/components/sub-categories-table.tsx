@@ -4,7 +4,7 @@ import { Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-import type { SubCategoryDto } from '@jmc/shared';
+import type { SubCategoryDto } from '@/shared';
 
 import { Button } from '@/components/shared/button';
 import { ConfirmDialog } from '@/components/shared/confirm-dialog';

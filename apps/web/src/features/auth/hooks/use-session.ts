@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import type { SessionUser } from '@jmc/shared';
+import type { SessionUser } from '@/shared';
 
 import { queryKeys } from '@/lib/query-keys';
 import { getSessionRequest, loginRequest, logoutRequest } from '../api';

@@ -11,7 +11,7 @@ import {
   updateUserSchema,
   type Role,
   type UserDto,
-} from '@jmc/shared';
+} from '@/shared';
 
 import { Button } from '@/components/shared/button';
 import { Dialog } from '@/components/shared/dialog';

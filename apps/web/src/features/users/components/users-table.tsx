@@ -4,7 +4,7 @@ import { Lock, LockOpen, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-import type { Role, UserDto } from '@jmc/shared';
+import type { Role, UserDto } from '@/shared';
 
 import { useSession } from '@/features/auth/hooks/use-session';
 

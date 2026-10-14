@@ -10,7 +10,7 @@ import {
   type UseFormSetValue,
 } from 'react-hook-form';
 
-import { MAX_ITEMS } from '@jmc/shared';
+import { MAX_ITEMS } from '@/shared';
 
 import { RupiahInput } from '@/components/shared/rupiah-input';
 import { formatRupiah } from '@/lib/format';

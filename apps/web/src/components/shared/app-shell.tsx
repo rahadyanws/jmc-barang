@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 
-import type { SessionUser } from '@jmc/shared';
+import type { SessionUser } from '@/shared';
 
 import { cn } from '@/lib/utils';
 import { useLogout, useSession } from '@/features/auth/hooks/use-session';

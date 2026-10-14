@@ -10,7 +10,7 @@ import {
   type CategoryDto,
   type CreateCategoryInput,
   MAX_CATEGORY_CODE_LENGTH,
-} from '@jmc/shared';
+} from '@/shared';
 
 import { Button } from '@/components/shared/button';
 import { Dialog } from '@/components/shared/dialog';

@@ -1,4 +1,4 @@
-import type { PaginationMeta } from '@jmc/shared';
+import type { PaginationMeta } from '../../shared';
 
 export function buildMeta(page: number, pageSize: number, totalItems: number): PaginationMeta {
   return {

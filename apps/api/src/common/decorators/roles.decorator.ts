@@ -1,6 +1,6 @@
 import { SetMetadata } from '@nestjs/common';
 
-import type { Role } from '@jmc/shared';
+import type { Role } from '../../shared';
 
 export const ROLES_KEY = 'roles';
 

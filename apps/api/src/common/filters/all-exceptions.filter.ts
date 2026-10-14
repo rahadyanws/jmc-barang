@@ -11,7 +11,7 @@ import { ZodValidationException } from 'nestjs-zod';
 import type { MulterError } from 'multer';
 import type { ZodError } from 'zod';
 
-import type { ApiErrorDetail } from '@jmc/shared';
+import type { ApiErrorDetail } from '../../shared';
 
 const STATUS_CODES_BY_DEFAULT_CODE: Record<number, string> = {
   400: 'VALIDATION_ERROR',

@@ -1,6 +1,6 @@
 import type { Prisma } from '@prisma/client';
 
-import type { IncomingGoodsListQuery } from '@jmc/shared';
+import type { IncomingGoodsListQuery } from '../../shared';
 
 /** Batas tahun dihitung di WIB (UTC+7): [YYYY-01-01T00:00+07:00, YYYY+1-01-01T00:00+07:00). */
 const WIB_UTC_OFFSET = '+07:00';

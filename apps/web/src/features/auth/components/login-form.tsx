@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
-import { loginSchema } from '@jmc/shared';
+import { loginSchema } from '@/shared';
 
 import { ApiError } from '@/lib/api-client';
 import { messages } from '@/lib/messages';

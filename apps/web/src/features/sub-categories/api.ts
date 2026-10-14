@@ -5,7 +5,7 @@ import type {
   SubCategoryDto,
   SubCategoryOptionDto,
   UpdateSubCategoryInput,
-} from '@jmc/shared';
+} from '@/shared';
 
 import { apiFetch } from '@/lib/api-client';
 

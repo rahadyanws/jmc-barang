@@ -7,8 +7,5 @@
     "^.+\\.ts$": "ts-jest"
   },
   "setupFiles": ["<rootDir>/setup-env.ts"],
-  "testTimeout": 30000,
-  "moduleNameMapper": {
-    "^@jmc/shared$": "<rootDir>/../../../packages/shared/src/index.ts"
-  }
+  "testTimeout": 30000
 }

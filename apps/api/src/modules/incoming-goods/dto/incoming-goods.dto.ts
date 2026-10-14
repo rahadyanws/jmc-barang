@@ -7,7 +7,7 @@ import {
   incomingGoodsListQuerySchema,
   updateIncomingGoodsSchema,
   verificationSchema,
-} from '@jmc/shared';
+} from '../../../shared';
 
 export class CreateIncomingGoodsDto extends createZodDto(createIncomingGoodsSchema) {}
 export class UpdateIncomingGoodsDto extends createZodDto(updateIncomingGoodsSchema) {}

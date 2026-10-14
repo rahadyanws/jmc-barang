@@ -7,7 +7,7 @@ import {
   type InputHTMLAttributes,
 } from 'react';
 
-import { MAX_MONEY } from '@jmc/shared';
+import { MAX_MONEY } from '@/shared';
 
 import { formatRupiah } from '@/lib/format';
 import { cn } from '@/lib/utils';

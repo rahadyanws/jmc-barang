@@ -1,7 +1,7 @@
 import { ConflictException } from '@nestjs/common';
 import { verify } from 'argon2';
 
-import type { Role } from '@jmc/shared';
+import type { Role } from '../../shared';
 
 import type { PrismaService } from '../../prisma/prisma.service';
 import { UsersService } from './users.service';
